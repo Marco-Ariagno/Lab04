@@ -70,11 +70,15 @@ public class FXMLController {
 		}
 		Studente s = model.studenteDataMatricola(matr);
 		if (s == null) {
+			txtResult.appendText("Matricola non esistente");
 			return;
 		}
 		Corso c = comboBoxCorsi.getValue();
-		if (c == null || c.getCodins().equals(" ")) {
+		if (c==null|| c.getCodins().equals(" ")) {
 			List<Corso> corsi = model.corsiDataMatricola(matr);
+			if(corsi.size()==0) {
+				txtResult.appendText("Studente non iscritto ad alcun corso");
+			}
 			for (Corso co : corsi) {
 				txtResult.appendText(
 						co.getCodins() + " " + co.getCrediti() + " " + co.getNome() + " " + co.getPd() + "\n");
@@ -92,11 +96,19 @@ public class FXMLController {
 	@FXML
 	void doCercaIscrittiCorso(ActionEvent event) {
 		Corso c = comboBoxCorsi.getValue();
-		if (c.getCodins().equals(" ")|| c==null) {
-			txtResult.appendText("Errore: non hai selezionato nessun corso!");
+		if (c==null) {
+			txtResult.appendText("Errore: non hai selezionato nessun corso!\n");
+			return;
+		}
+		if (c.getCodins().equals(" ")) {
+			txtResult.appendText("Errore: non hai selezionato nessun corso!\n");
 			return;
 		}
 		List<Studente> studenti = model.studentiDatoCorso(c);
+		if(studenti.size()==0) {
+			txtResult.appendText("Nessuno studente insritto a questo corso\n");
+			return;
+		}
 		for (Studente s : studenti) {
 			txtResult.appendText(s.toString() + "\n");
 		}
@@ -110,7 +122,7 @@ public class FXMLController {
 		}
 		Studente s = model.studenteDataMatricola(matricola);
 		if (s == null) {
-			txtResult.appendText("Matricola non esistente");
+			txtResult.appendText("Matricola non esistente\n");
 			return;
 		}
 		txtNome.appendText(s.getNome());
@@ -139,6 +151,7 @@ public class FXMLController {
 		txtNome.clear();
 		txtCognome.clear();
 		txtResult.clear();
+		comboBoxCorsi.getSelectionModel().clearSelection();
 	}
 	
 	public int controlloMatricola() {
@@ -147,7 +160,7 @@ public class FXMLController {
 		try {
 			matr = Integer.parseInt(matricola);
 		} catch (NumberFormatException nfe) {
-			txtResult.appendText("Digita un numero di matricola!!");
+			txtResult.appendText("Digita un numero di matricola!!\n");
 		}
 		return matr;
 	}
