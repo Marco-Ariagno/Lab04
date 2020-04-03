@@ -61,6 +61,7 @@ public class FXMLController {
 
 	@FXML
 	void doCercaCorsi(ActionEvent event) {
+		txtResult.clear();
 		String matricola = txtMatricola.getText();
 		int matr = 0;
 		try {
@@ -74,20 +75,20 @@ public class FXMLController {
 			return;
 		}
 		Corso c = comboBoxCorsi.getValue();
-		if (c==null|| c.getCodins().equals(" ")) {
-			List<Corso> corsi = model.corsiDataMatricola(matr);
-			if(corsi.size()==0) {
+		if (c == null || c.getCodins().equals(" ")) {
+			List<Corso> corsi = model.corsiDataMatricola(new Studente(matr, null, null, null));
+			if (corsi.size() == 0) {
 				txtResult.appendText("Studente non iscritto ad alcun corso");
 			}
 			for (Corso co : corsi) {
 				txtResult.appendText(
 						co.getCodins() + " " + co.getCrediti() + " " + co.getNome() + " " + co.getPd() + "\n");
 			}
-		}  else {
-			boolean esiste=model.esisteCoppiaCorsoStudente(c, s);
-			if(esiste==true) {
+		} else {
+			boolean esiste = model.esisteCoppiaCorsoStudente(c, s);
+			if (esiste == true) {
 				txtResult.appendText("Studente iscritto a questo corso\n");
-			}else {
+			} else {
 				txtResult.appendText("Studente NON iscritto a questo corso\n");
 			}
 		}
@@ -95,8 +96,9 @@ public class FXMLController {
 
 	@FXML
 	void doCercaIscrittiCorso(ActionEvent event) {
+		txtResult.clear();
 		Corso c = comboBoxCorsi.getValue();
-		if (c==null) {
+		if (c == null) {
 			txtResult.appendText("Errore: non hai selezionato nessun corso!\n");
 			return;
 		}
@@ -105,7 +107,7 @@ public class FXMLController {
 			return;
 		}
 		List<Studente> studenti = model.studentiDatoCorso(c);
-		if(studenti.size()==0) {
+		if (studenti.size() == 0) {
 			txtResult.appendText("Nessuno studente insritto a questo corso\n");
 			return;
 		}
@@ -116,8 +118,8 @@ public class FXMLController {
 
 	@FXML
 	void doCercaNomeECognomeDataMatricola(ActionEvent event) {
-		int matricola=controlloMatricola();
-		if(matricola==0) {
+		int matricola = controlloMatricola();
+		if (matricola == 0) {
 			return;
 		}
 		Studente s = model.studenteDataMatricola(matricola);
@@ -131,16 +133,16 @@ public class FXMLController {
 
 	@FXML
 	void doIscrivi(ActionEvent event) {
-		Corso c=comboBoxCorsi.getValue();
-		int matricola=controlloMatricola();
-		if(matricola==0) {
+		Corso c = comboBoxCorsi.getValue();
+		int matricola = controlloMatricola();
+		if (matricola == 0) {
 			return;
 		}
 		Studente s = model.studenteDataMatricola(matricola);
-		boolean inseribile=model.inserisci(s, c);
-		if(inseribile==false) {
+		boolean inseribile = model.inserisci(s, c);
+		if (inseribile == false) {
 			txtResult.appendText("Studente gia iscritto a questo corso\n");
-		}else {
+		} else {
 			txtResult.appendText("Studente iscritto ora a questo corso\n");
 		}
 	}
@@ -153,7 +155,7 @@ public class FXMLController {
 		txtResult.clear();
 		comboBoxCorsi.getSelectionModel().clearSelection();
 	}
-	
+
 	public int controlloMatricola() {
 		String matricola = txtMatricola.getText();
 		int matr = 0;
